@@ -36,15 +36,15 @@ import java.security.interfaces.ECPublicKey;
 import java.util.Collections;
 import java.util.Enumeration;
 import javax.crypto.Mac;
-//import org.bouncycastle.crypto.macs.*;
-//import org.bouncycastle.crypto.io.MacInputStream;
+ 
+ 
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-//import org.bouncycastle.crypto.io.MacInputStream;
-//import org.bouncycastle.crypto.io.MacOutputStream;
+ 
+ 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -265,20 +265,20 @@ public class GUITool extends JFrame {
 				for (JTextField textField : textFields) {
 					textField.setText("");
 				}
-				 // 计算字符串的HASH值
+				  
 					String s = textFieldString.getText();
 					for (int i = 0; i < checkboxes.length; i++) {
 						if (checkboxes[i].isSelected()) {
 							try {
 								Security.addProvider(new BouncyCastleProvider());
 								MessageDigest md = MessageDigest.getInstance(hashAlgs[i]);
-//								md.update(s.getBytes());
-//								byte[] digestValue = md.digest();
-//								textFields[i].setText(Hex.toHexString(digestValue));
+ 
+ 
+ 
 								
 								textFields[i].setText(Hex.toHexString(md.digest(s.getBytes())));
 							} catch (NoSuchAlgorithmException e1) {
-								// TODO Auto-generated catch block
+								 
 								e1.printStackTrace();
 							
 						}
@@ -299,8 +299,8 @@ public class GUITool extends JFrame {
 		panelHashCalulator.add(btnClose);
 		
 		JButton btnOpenFile = new JButton("\u6587\u4EF6HASH\u8BA1\u7B97");
-		btnOpenFile.addActionListener(new ActionListener() {  //打开按钮选择文件
-			public void actionPerformed(ActionEvent arg0) {  //点击事件
+		btnOpenFile.addActionListener(new ActionListener() {   
+			public void actionPerformed(ActionEvent arg0) {   
 				
 				JCheckBox[] checkboxes = {chckbxMD5, chckbxSHA1, chckbxSHA2_224,chckbxSHA2_256,chckbxSHA2_384,chckbxSHA2_512,chckbxSHA3_224,chckbxSHA3_256,chckbxSHA3_384,chckbxSHA3_512,chckbxSM3};
 				JTextField[] textFields = {textFieldMD5, textFieldSHA1, textFieldSHA2_224,textFieldSHA2_256,textFieldSHA2_384,textFieldSHA2_512,textFieldSHA3_224,textFieldSHA3_256,textFieldSHA3_384,textFieldSHA3_512,textFieldSM3};
@@ -310,32 +310,32 @@ public class GUITool extends JFrame {
 					textField.setText("");
 				}
 				
-					JFileChooser fileChooser = new JFileChooser();             //采用JFileChooser控件 
+					JFileChooser fileChooser = new JFileChooser();              
 					if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 						File file = fileChooser.getSelectedFile();
 						String ss = textFieldFileName.getText();
-						textFieldFileName.setText(fileChooser.getSelectedFile().getName());  //显示打开的文件名
-					for (int i = 0; i < checkboxes.length; i++) {  //循环进行hash计算
+						textFieldFileName.setText(fileChooser.getSelectedFile().getName());   
+					for (int i = 0; i < checkboxes.length; i++) {   
 						if (checkboxes[i].isSelected()) {
 						try {
 							Security.addProvider(new BouncyCastleProvider());
 							MessageDigest md = MessageDigest.getInstance(hashAlgs[i]);
 							try (FileInputStream fis = new FileInputStream(file);
 									DigestInputStream dis = new DigestInputStream(fis, md)) {
-//								while (dis.read() != -1);
+ 
 								byte[] buffer = new byte[1024];
 								while(dis.read(buffer) != -1);
 								
-								textFields[i].setText(Hex.toHexString(md.digest())); //向结果框内写入结果
+								textFields[i].setText(Hex.toHexString(md.digest()));  
 							}
 						} catch (NoSuchAlgorithmException e) {
-							// TODO Auto-generated catch block
+							 
 							e.printStackTrace();
 						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
+							 
 							e.printStackTrace();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
+							 
 							e.printStackTrace();
 						}
 							}
@@ -356,9 +356,9 @@ public class GUITool extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//获取所选文件的绝对路径
+					 
 					String fileName = fileChooser.getSelectedFile().getPath();
-					// 将文件路径传给textField_Name
+					 
 					textField_Name.setText(fileName);
 				}
 			}
@@ -399,11 +399,11 @@ public class GUITool extends JFrame {
 		JButton btnEncryptFile = new JButton("\u52A0\u5BC6\u6587\u4EF6");
 		btnEncryptFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)  {
-				//  加密文件
+				 
 				String plainFileName = textField_Name.getText();
 				String cipherFileName = plainFileName + ".enc";
-				String algorithm = null;   // 定义加密算法变量
-				int algType = 0; // 定义加密算法类型，用来写在加密文件里，以便解密时使用ZUC-128 = 0; ZUC-256 = 1; SM4 = 2;
+				String algorithm = null;    
+				int algType = 0;  
 				int ivSize = 16;
 				char[] password = passwordField.getPassword();				
 				int keySize = 128;
@@ -423,45 +423,45 @@ public class GUITool extends JFrame {
 					ivSize = 16;
 					algorithm = "SM4";
 				}
-				// 基于口令生成密钥
+				 
 				SecretKeySpec key = passwordToKey(new String(password), keySize);
-				// 随机生成IV
+				 
 				byte[] ivValue = new byte[ivSize];
 				SecureRandom random = new SecureRandom();
 				random.nextBytes(ivValue);
 				IvParameterSpec iv = new IvParameterSpec(ivValue);
-					// 创建cipher对象
+					 
 					Cipher cipher = null;
 					try {
 						cipher = Cipher.getInstance(algorithm, "BC");
 					} catch (NoSuchAlgorithmException e2) {
-						// TODO Auto-generated catch block
+						 
 						e2.printStackTrace();
 					} catch (NoSuchProviderException e2) {
-						// TODO Auto-generated catch block
+						 
 						e2.printStackTrace();
 					} catch (NoSuchPaddingException e2) {
-						// TODO Auto-generated catch block
+						 
 						e2.printStackTrace();
 					}
 					try {
 						cipher.init(Cipher.ENCRYPT_MODE, key, iv);
 					} catch (InvalidKeyException e2) {
-						// TODO Auto-generated catch block
+						 
 						e2.printStackTrace();
 					} catch (InvalidAlgorithmParameterException e2) {
-						// TODO Auto-generated catch block
+						 
 						e2.printStackTrace();
 					}
-					// 将密钥长度和iv写到密文文件开头
+					 
 					try (FileOutputStream fos = new FileOutputStream(cipherFileName)) {
-						// 在密文文件开头写入加密算法类型(用了一个字节)，单位是字节
+						 
 						fos.write(algType);
-						// 接着在密文文件里写入密钥长度(用了一个字节)，单位是字节
+						 
 						fos.write(keySize / 8);
-						// 接着在密文文件里写入IV的长度
+						 
 						fos.write(ivSize);
-						// 接着在密文文件开头写入iv(用了ivSize个字节)
+						 
 						fos.write(ivValue);
 						try (FileInputStream fis = new FileInputStream(plainFileName);
 								CipherInputStream cis = new CipherInputStream(fis, cipher)) {
@@ -473,10 +473,10 @@ public class GUITool extends JFrame {
 							JOptionPane.showMessageDialog(null, "文件加密成功");
 						}
 					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 			}
@@ -487,26 +487,26 @@ public class GUITool extends JFrame {
 		JButton btnDecryptFile = new JButton("\u89E3\u5BC6\u6587\u4EF6");
 		btnDecryptFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// 解密文件
-				String cipherFileName = textField_Name.getText(); // 获取待解密的密文文件名
+				 
+				String cipherFileName = textField_Name.getText();  
 				String decryptedFileName = cipherFileName + ".dec";
-				int algType = 0; // 定义加密算法类型，用来写在加密文件里，以便解密时使用ZUC-128 = 0; ZUC-256 = 1; SM4 = 2;
-				int keySize = 0; // 定义密钥长度
-				int ivSize = 0;  //定义IV长度
+				int algType = 0;  
+				int keySize = 0;  
+				int ivSize = 0;   
 				String algorithm = "";
-				char[] password = passwordField.getPassword(); // 读入口令
+				char[] password = passwordField.getPassword();  
 
 				try(FileInputStream fis = new FileInputStream(cipherFileName)) {
-					// 从密文文件开头读取算法类型
+					 
 					algType = fis.read();
-					// 从密文文件读取密钥长度
+					 
 					keySize = fis.read() * 8; 
-					// 从密文文件里读出IV长度
+					 
 					ivSize = fis.read(); 
-					// 从密文中读出IV值
+					 
 					byte[] ivValue = new byte[ivSize]; 
 					fis.read(ivValue);
-					// 根据得到的IV值恢复IV
+					 
 					IvParameterSpec iv = new IvParameterSpec(ivValue);
 					SecretKeySpec key = passwordToKey(new String(password), keySize);
 					if (algType == 0 ) {
@@ -526,34 +526,34 @@ public class GUITool extends JFrame {
 						while((n = cis.read(buffer)) != -1) {
 							fos.write(buffer, 0, n);
 						}
-//						File oldName = new File(cipherFileName);
-//				        File newName = new File(cipherFileName + ".docx");
-//				        oldName.renameTo(newName);
+ 
+ 
+ 
 						JOptionPane.showMessageDialog(null, "文件解密成功");
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 				} catch (NoSuchAlgorithmException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				} catch (NoSuchProviderException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				} catch (NoSuchPaddingException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				} catch (InvalidKeyException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				} catch (InvalidAlgorithmParameterException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				} catch (FileNotFoundException e2) {
-					// TODO Auto-generated catch block
+					 
 					e2.printStackTrace();
 				} catch (IOException e2) {
-					// TODO Auto-generated catch block
+					 
 					e2.printStackTrace();
 				}
 			}
@@ -583,9 +583,9 @@ public class GUITool extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//获取所选文件的绝对路径
+					 
 					String fileName = fileChooser.getSelectedFile().getPath();
-					//将获取到的路径传给textFieldFile_Name2
+					 
 					textFieldFile_Name2.setText(fileName);
 				}
 			}
@@ -611,34 +611,34 @@ public class GUITool extends JFrame {
 				try {
 					keyStore = KeyStore.getInstance("PKCS12");
 				} catch (KeyStoreException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				}
 				try (FileInputStream fis = new FileInputStream("F:\\java-2019-03\\javaprject\\Less4\\work")) {
-					// 创建KeyStore对象，并从密钥库文件中读入内容
+					 
 					Security.addProvider(new BouncyCastleProvider());
 					char[] password = "123456".toCharArray();
 					try {
 						keyStore.load(fis, password);
 					} catch (NoSuchAlgorithmException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					} catch (CertificateException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
-					// 遍历并打印密钥库中的所有别名
+					 
 					Enumeration<String> aliases = null;
 					try {
 						aliases = keyStore.aliases();
 					} catch (KeyStoreException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
-					//System.out.println("密钥库文件中的密钥条目别名如下：");
+					 
 					Collections.list(aliases).forEach(System.out::println);
 
-					// 读取密钥对myrsakey中的私钥，创建一个私钥对象，并打印其内容
+					 
 					KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(
 							password);
 					KeyStore.PrivateKeyEntry keyEntry = null;
@@ -646,29 +646,29 @@ public class GUITool extends JFrame {
 						keyEntry = (PrivateKeyEntry) keyStore
 								.getEntry("myeckey", protParam);
 					} catch (NoSuchAlgorithmException | UnrecoverableEntryException | KeyStoreException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 					ECPrivateKey privateKey = (ECPrivateKey) keyEntry.getPrivateKey();
 					priKey = privateKey;
-					//System.out.println("私钥: " + ( (RSAPrivateKey) privateKey).getPrivateExponent());
+					 
 
-					// 读取密钥对myrsakey中的公钥对应的自签名证书，打印证书内容和公钥值
+					 
 					X509Certificate certificate = null;
 					try {
 						certificate = (X509Certificate) keyStore.getCertificate("myeckey");
 					} catch (KeyStoreException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
-					//System.out.println("证书基本信息" + certificate);
+					 
 					ECPublicKey publicKey = (ECPublicKey) certificate.getPublicKey();
-					//System.out.println("公钥：" + publicKey);
+					 
 				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				}
 			
@@ -676,7 +676,7 @@ public class GUITool extends JFrame {
 						signFile(toSignFileName, priKey, signFileName);
 						JOptionPane.showMessageDialog(null, "签名成功");
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 			}
@@ -690,9 +690,9 @@ public class GUITool extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//获取所选文件的绝对路径
+					 
 					String fileName = fileChooser.getSelectedFile().getPath();
-					//将获取到的路径传给textFieldVerified
+					 
 					textFieldVerified.setText(fileName);
 				}
 			}
@@ -713,7 +713,7 @@ public class GUITool extends JFrame {
 				Security.addProvider(new BouncyCastleProvider());
 				String tobeSignFileName = textFieldVerified.getText();
 				String signFilrNameString = textFieldSignValue.getText();
-				//String signFileName = toSignFileName + ".sign";
+				 
 				
 				ECPublicKey pubKey = null;
 				
@@ -721,34 +721,34 @@ public class GUITool extends JFrame {
 				try {
 					keyStore = KeyStore.getInstance("PKCS12");
 				} catch (KeyStoreException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				}
 				try (FileInputStream fis = new FileInputStream("F:\\java-2019-03\\javaprject\\Less4\\work")) {
-					// 创建KeyStore对象，并从密钥库文件中读入内容
+					 
 					Security.addProvider(new BouncyCastleProvider());
 					char[] password = "123456".toCharArray();
 					try {
 						keyStore.load(fis, password);
 					} catch (NoSuchAlgorithmException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					} catch (CertificateException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
-					// 遍历并打印密钥库中的所有别名
+					 
 					Enumeration<String> aliases = null;
 					try {
 						aliases = keyStore.aliases();
 					} catch (KeyStoreException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
-					//System.out.println("密钥库文件中的密钥条目别名如下：");
+					 
 					Collections.list(aliases).forEach(System.out::println);
 
-					// 读取密钥对myrsakey中的私钥，创建一个私钥对象，并打印其内容
+					 
 					KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(
 							password);
 					KeyStore.PrivateKeyEntry keyEntry = null;
@@ -756,30 +756,30 @@ public class GUITool extends JFrame {
 						keyEntry = (PrivateKeyEntry) keyStore
 								.getEntry("myeckey", protParam);
 					} catch (NoSuchAlgorithmException | UnrecoverableEntryException | KeyStoreException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 					ECPrivateKey privateKey = (ECPrivateKey) keyEntry.getPrivateKey();
-					//priKey = privateKey;
-					//System.out.println("私钥: " + ( (RSAPrivateKey) privateKey).getPrivateExponent());
+					 
+					 
 
-					// 读取密钥对myrsakey中的公钥对应的自签名证书，打印证书内容和公钥值
+					 
 					X509Certificate certificate = null;
 					try {
 						certificate = (X509Certificate) keyStore.getCertificate("myeckey");
 					} catch (KeyStoreException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
-					//System.out.println("证书基本信息" + certificate);
+					 
 					ECPublicKey publicKey = (ECPublicKey) certificate.getPublicKey();
-					//System.out.println("公钥：" + publicKey);
+					 
 					pubKey = publicKey;
 				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				}
 				
@@ -792,7 +792,7 @@ public class GUITool extends JFrame {
 					else textFieldResult.setText("验证失败");
 					
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
+					 
 					e1.printStackTrace();
 				}
 				
@@ -815,9 +815,9 @@ public class GUITool extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//获取所选文件的绝对路径
+					 
 					String fileName = fileChooser.getSelectedFile().getPath();
-					//将获取到的路径传给textSignValue
+					 
 					textFieldSignValue.setText(fileName);
 				}
 			}
@@ -894,10 +894,10 @@ public class GUITool extends JFrame {
 						if (checkboxes2[i].isSelected()) {
 							try {
 								Security.addProvider(new BouncyCastleProvider());
-								//MessageDigest md = MessageDigest.getInstance(hashAlgs[i]);
-//								md.update(s.getBytes());
-//								byte[] digestValue = md.digest();
-//								textFields[i].setText(Hex.toHexString(digestValue));
+								 
+ 
+ 
+ 
 								String hashType = null;
 								
 								if ( i == 0) {
@@ -906,15 +906,15 @@ public class GUITool extends JFrame {
 								else {
 									hashType = "ZUC-256";
 								}
-								// 初始化MAC摘要算法的密钥产生器
+								 
 								KeyGenerator generator = KeyGenerator.getInstance(hashType);
-								// 产生密钥
+								 
 								SecretKey secretKey = generator.generateKey();
-								// 获得密钥
+								 
 								byte[] key = secretKey.getEncoded();
 								
 								
-								// 随机IV
+								 
 								int flag = 0;
 								if ( i== 0) {
 									 flag =  16;
@@ -931,29 +931,29 @@ public class GUITool extends JFrame {
 								
 								SecretKey secretKey2 = new SecretKeySpec(key, hashType);
 								
-								// 实例化Mac
+								 
 								Mac mac = Mac.getInstance(hashAlgs[i]);
 								
-								// 初始化mac
+								 
 									try {
 										mac.init( secretKey2, iv);
 									} catch (InvalidKeyException e1) {
-										// TODO Auto-generated catch block
+										 
 										e1.printStackTrace();
 									} catch (InvalidAlgorithmParameterException e1) {
-										// TODO Auto-generated catch block
+										 
 										e1.printStackTrace();
 									}
 								
-								// 执行消息摘要
-//								byte[] digest = mac.doFinal(s.getBytes());
-//								
-//								for(byte b : digest) {
-//									System.out.printf("%02x", b);
-//								}
+								 
+ 
+ 
+ 
+ 
+ 
 								textFields2[i].setText(Hex.toHexString(mac.doFinal(s.getBytes())));
 							} catch (NoSuchAlgorithmException e1) {
-								// TODO Auto-generated catch block
+								 
 								e1.printStackTrace();
 							
 						}
@@ -970,9 +970,9 @@ public class GUITool extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					//获取所选文件的绝对路径
+					 
 					String fileName = fileChooser.getSelectedFile().getPath();
-					//将获取到的路径传给textFieldFileName_3
+					 
 					textFieldFileName_3.setText(fileName);
 				}
 			}
@@ -996,96 +996,15 @@ public class GUITool extends JFrame {
 			int[] ivSize = {16, 25, 25, 25};
 
 			
-//				JCheckBox[] checkboxes3 = { chckbxZUC_128, chckbxZUC_256, chckbxZUC_256_32, chckbxZUC_256_64};
+ 
 				JTextField[] textFields3 = { textFieldZUC_128, textFieldZUC_256, textFieldZUC_256_32, textFieldZUC_256_64};
-//				String[] hashAlgs = { "ZUC-128", "ZUC-256", "ZUC-256-32", "ZUC-256-64"};
-//				
-//				//Mac mac = null;
-//				for (int i = 0; i < checkboxes3.length; i++) {
-//					Security.addProvider(new BouncyCastleProvider());
-//				String fileName = textFieldFileName_3.getText();
-//				fileName = fileName.replace('\\', '/');
-//				try (FileInputStream fis = new FileInputStream(fileName)){						
-//					try {
-//						//MessageDigest md = MessageDigest.getInstance("SM3");
-//						
-//						Security.addProvider(new BouncyCastleProvider());
-//						
-//						String hashType = null;
-//						
-//						if ( i == 0) {
-//							hashType = "ZUC-128";
-//						}
-//						else {
-//							hashType = "ZUC-256";
-//						}
-//						// 初始化MAC摘要算法的密钥产生器
-//						KeyGenerator generator = KeyGenerator.getInstance(hashType);
-//						// 产生密钥
-//						SecretKey secretKey = generator.generateKey();
-//						// 获得密钥
-//						byte[] key = secretKey.getEncoded();
-//						
-//						
-//						// 随机IV
-//						int flag = 0;
-//						if ( i== 0) {
-//							 flag =  16;
-//						}
-//						else {
-//							flag = 25;
-//						}
-//						byte[] ivValue = new byte[flag];
-//						SecureRandom random = new SecureRandom();
-//						random.nextBytes(ivValue);
-//						IvParameterSpec iv = new IvParameterSpec(ivValue);
-//						
-//						
-//
-//						SecretKey secretKey2 = new SecretKeySpec(key, hashType);
-//						
-//						
-//						Mac mac = Mac.getInstance(hashAlgs[i]);
-//							
-//						mac.init( secretKey2, iv);
-//							
-//						byte[] buffer = new byte[1024];
-//						int n = 0;
-//						while ((n = fis.read(buffer)) != -1) {
-//							mac.update(buffer, 0, n);
-//						}
-//						
-//						
-//						textFields3[i].setText(Hex.toHexString(mac.doFinal()));
-//					} catch (InvalidKeyException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					} catch (NoSuchAlgorithmException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					} catch (InvalidAlgorithmParameterException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					} catch (IllegalStateException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}												
-//			
-//				} catch (FileNotFoundException e2) {
-//					// TODO Auto-generated catch block
-//					e2.printStackTrace();
-//				} catch (IOException e2) {
-//					// TODO Auto-generated catch block
-//					e2.printStackTrace();
-//				}
-//				}
-				
+ 
 				for (JTextField textField : textFields3) {
 					textField.setText("");
 				}
-				//判断文件类型
+				 
 				
-					//计算文件的Mac码
+					 
 					String fileName = textFieldFileName_3.getText();
 					fileName = fileName.replace('\\', '/');
 					System.out.println(fileName);
@@ -1095,7 +1014,7 @@ public class GUITool extends JFrame {
 							if (checkBoxs_Mac[i].isSelected()) {
 								KeyGenerator keyGenerator = KeyGenerator.getInstance(macAlgsType[i], "BC");
 								SecretKey secretKey = keyGenerator.generateKey();
-								// 随机生成IV
+								 
 								byte[] ivValue = new byte[ivSize[i]];
 								SecureRandom random = new SecureRandom();
 								random.nextBytes(ivValue);
@@ -1103,7 +1022,7 @@ public class GUITool extends JFrame {
 								
 								Mac mac = Mac.getInstance(macAlgs[i], "BC");
 								mac.init(secretKey, iv);
-									// 方法4：每次读一个数组（每次最多读1024个字节），速度快
+									 
 									byte[] buffer = new byte[1024];
 									int n = 0;
 									while(fis.read(buffer) != -1) {
@@ -1117,16 +1036,16 @@ public class GUITool extends JFrame {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					} catch (NoSuchAlgorithmException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					} catch (NoSuchProviderException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					} catch (InvalidKeyException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					} catch (InvalidAlgorithmParameterException e1) {
-						// TODO Auto-generated catch block
+						 
 						e1.printStackTrace();
 					}
 					}	
@@ -1137,14 +1056,14 @@ public class GUITool extends JFrame {
 	}
 
 
-//基于口令生成密钥
+ 
 		private static SecretKeySpec passwordToKey(String password, int keySize) {
-			Security.addProvider(new BouncyCastleProvider());   // 不加这个，报错：No such provider: BC
+			Security.addProvider(new BouncyCastleProvider());    
 			MessageDigest md = null;
 			try {
 				md = MessageDigest.getInstance("SHA3-256");
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
+				 
 				e.printStackTrace();
 			}
 			byte[] hashValue = md.digest(password.getBytes());
@@ -1153,45 +1072,45 @@ public class GUITool extends JFrame {
 		}
 		
 		public static boolean verifyFile(String fileToVerify, PublicKey key, String signValueFile) throws Exception {
-			// try-with-resource语句创建的流不需要手动关闭
+			 
 			Security.addProvider(new BouncyCastleProvider());
 			try (FileInputStream fisFileToVerify = new FileInputStream(fileToVerify);
 					FileInputStream fisSignValueFile = new FileInputStream(signValueFile)) {
-				// 创建数字签名对象
+				 
 				Signature signature = Signature.getInstance("SHA256withSM2");
-				// 用公钥初始化数字签名对象，让它做签名验证工作
+				 
 				signature.initVerify(key);
-				// 将文件内容加载到数字签名对象上
+				 
 				byte[] buffer = new byte[1024];
 				int n = 0;
 				while ((n = fisFileToVerify.read(buffer)) != -1) {
 					signature.update(buffer, 0, n);
 				}
-				// 读取数字签名值
+				 
 				byte[] signatureValue = new byte[fisSignValueFile.available()];
 				fisSignValueFile.read(signatureValue);
-				// 验证数字签名并返回验证结果
+				 
 				return signature.verify(signatureValue);
 			}
 		}
 
 		public static void signFile(String fileToSign, PrivateKey key, String signValueFile) throws Exception {
-			// try-with-resource语句创建的流不需要手动关闭
+			 
 			try (FileInputStream fis = new FileInputStream(fileToSign);
 					FileOutputStream fos = new FileOutputStream(signValueFile)) {
-				//创建数字签名对象
+				 
 				Signature signature = Signature.getInstance("SHA256withSM2");
-				//用私钥初始化数字签名对象，让它做签名生成工作
+				 
 				signature.initSign(key);
-				// 将文件内容加载到数字签名对象上
+				 
 				byte[] buffer = new byte[1024];
 				int n = 0;
 				while ((n = fis.read(buffer)) != -1) {
 					signature.update(buffer, 0, n);
 				}
-				//计算数字签名值
+				 
 				byte[] signaturValue = signature.sign();
-				//存储数字签名值
+				 
 				fos.write(signaturValue);
 			}
 		}
